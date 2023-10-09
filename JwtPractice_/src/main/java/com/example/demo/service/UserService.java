@@ -22,4 +22,25 @@ public class UserService {
 	}
 	
 	
+	public boolean login(UserDTO userDTO) {
+		User user = userRepository.findById(userDTO.getId());
+		
+		if(validate(user,userDTO)) {
+			return true;
+		}
+		else {
+			return false;
+		}
+		
+	}
+	
+	private boolean validate(User user,UserDTO userDTO) {
+		if(user.getId().equals(userDTO.getId()) && user.getPassword().equals(userDTO.getPassword())) {
+			return true;
+		}
+		else 
+			return false;
+	}
+	
+	
 }

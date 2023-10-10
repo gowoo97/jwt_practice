@@ -14,7 +14,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Service
 public class TokenProvider {
 
-	private final String securityKey = "shfkjdshfuewkfkwefewkjhfkw";
+	private final String securityKey = "HRlELXqpSBsfsdfwejfiowejfdsjfkwefhweiuhwekhgjkd";
 	private final Long expiredTime = 1000*60L*60L*24L;
 	
 	public String createToken(UserDTO userDTO) {
@@ -22,6 +22,7 @@ public class TokenProvider {
 		return Jwts.builder()
 				.setSubject(userDTO.getId())
 				.setHeader(createHeader())
+				.setId(userDTO.getId())
 				.setClaims(createClaims(userDTO))
 				.setExpiration(new Date(now.getTime()+expiredTime))
 				.signWith(SignatureAlgorithm.HS256, securityKey)
@@ -40,6 +41,16 @@ public class TokenProvider {
 		claims.put("id", userDTO.getId());
 		claims.put("password", userDTO.getPassword());
 		return claims;
+	}
+	
+	public String validateToken(String token) {
+		try {
+			
+			return (String)Jwts.parserBuilder().setSigningKey(securityKey).build().parseClaimsJws(token).getBody().get("id");
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 }
